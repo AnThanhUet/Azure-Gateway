@@ -2,15 +2,31 @@ import paho.mqtt.client as mqtt
 import json
 import random
 from time import sleep
+from azure.iot.device import IoTHubDeviceClient, Message  
 #from publish_thingsboard import pub
 #from save_database import save
-from publish_azure import send_azure
+#from publish_azure import send_azure
+
+CONNECTION_STRING = "HostName=hub-anthanh.azure-devices.net;DeviceId=node;SharedAccessKey=wkA5fp+tmLyjmO1AmK+jefmZKUhYMxekjGOAJmLEXWY=" 
+MSG_SND = '{{"temperature": {temperature},"humidity": {humidity}}}' 
+
+azure = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING) 
 
 # Mosquiito Broker setting
 MQTT_Broker = "192.168.137.196"
 MQTT_Port = 1883
 Keep_Alive_Interval = 7200
 MQTT_Topic = 'hello'
+
+def send_azure(jsonData)
+    data = json.loads(jsonData)
+    humidity = data['humidity']
+    temperature = data['temperature']
+    msg_txt_formatted = MSG_SND.format(temperature=temperature, humidity=humidity)
+    message = Message(msg_txt_formatted)
+    print( "Sending message: {}".format(message) )
+    azure.send_message(message)
+    print ( "Message successfully sent" )   
 
 # Callback server
 def on_connect(client, userdata, flags, rc):
