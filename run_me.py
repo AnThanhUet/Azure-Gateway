@@ -29,16 +29,17 @@ def send_azure(jsonData):
     azure.send_message(message)
     print ( "Message successfully sent" )   
 
-def save(data):
-        
+def save(data):    
 	json_Dict = json.loads(data)
 	#print(data)
 	Temperature = json_Dict['temperature']
 	Humidity = json_Dict['humidity']
+    Time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+
 	db = pymysql.connect("localhost", "root", "admin999999999", "azure")
 	cursor = db.cursor()
 	# Execute
-	cursor.execute("INSERT INTO Xuanthuy(Temperature, Humidity) VALUES(%s,%s)",(Temperature,Humidity))
+	cursor.execute("INSERT INTO Xuanthuy(Temperature, Humidity, Time) VALUES(%s,%s,%s)",(Temperature,Humidity,Time))
 	print(">> save database azure - table Xuanthuy!")
 	db.commit()
 	db.close()

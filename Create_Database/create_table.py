@@ -14,8 +14,8 @@ try:
     
     dbs = mycursor.execute("create table Xuanthuy(Temperature float not null, "
        # + "ID int not null, "
-      #  + "Temperature float not null, "
-        + "Humidity float not null)")
+        + "Humidity float not null, "
+        + "Time varchar(255) not null)")
 except:
     mycursor.rollback()
  
