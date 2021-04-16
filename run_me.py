@@ -34,7 +34,7 @@ def save(data):
 	#print(data)
 	Temperature = json_Dict['temperature']
 	Humidity = json_Dict['humidity']
-    Time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+	Time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
 	db = pymysql.connect("localhost", "root", "admin999999999", "azure")
 	cursor = db.cursor()
