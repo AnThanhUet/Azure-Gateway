@@ -55,7 +55,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print("Message Broker  Recieved: "+msg.payload.decode())
     send_azure(msg.payload)
-    #save(msg.payload.decode()) #save database
+    save(msg.payload) #save database
     #mosquitto_pub -d -t hello -m "{\"Area\":\"xuanthuy\",\"ID\":1,\"Temperature\":4,\"Humidity\":45}"
 
 client = mqtt.Client()
