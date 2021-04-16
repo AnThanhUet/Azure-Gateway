@@ -3,6 +3,8 @@ import json
 import random
 from time import sleep
 from azure.iot.device import IoTHubDeviceClient, Message  
+import pymysql
+from datetime import datetime
 #from save_database import save
 
 # Azure server
@@ -26,6 +28,20 @@ def send_azure(jsonData):
     print( "Sending azure: {}".format(message) )
     azure.send_message(message)
     print ( "Message successfully sent" )   
+
+def save(data):
+        
+	json_Dict = json.loads(data)
+	#print(data)
+	Temperature = json_Dict['temperature']
+	Humidity = json_Dict['humidity']
+	db = pymysql.connect("localhost", "root", "admin999999999", "azure")
+	cursor = db.cursor()
+	# Execute
+	cursor.execute("INSERT INTO Xuanthuy(Temperature, Humidity) VALUES(%s,%s)",(Temperature,Humidity))
+	print(">> save database azure - table Xuanthuy!")
+	db.commit()
+	db.close()
 
 # Callback server
 def on_connect(client, userdata, flags, rc):

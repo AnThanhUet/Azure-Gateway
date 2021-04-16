@@ -10,7 +10,7 @@ myconn = mysql.connector.connect(
 cur = myconn.cursor()
  
 try:
-    cur.execute("create database uet")
+    cur.execute("create database azure")
     dbs = cur.execute("show databases")
 except:
     myconn.rollback()

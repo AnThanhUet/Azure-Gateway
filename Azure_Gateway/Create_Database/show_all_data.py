@@ -6,14 +6,14 @@ myconn = mysql.connector.connect(
     host = "localhost", 
     user = "root",
     passwd = "admin999999999", 
-    database = "uet")
+    database = "azure")
  
 #tạo đối tượng cursor
 cur = myconn.cursor()
  
 try:
     # select dữ liệu từ database
-    cur.execute("SELECT * FROM sensors")
+    cur.execute("SELECT * FROM Xuanthuy")
      
     # tìm nạp các hàng từ đối tượng con trỏ  
     result = cur.fetchall()
