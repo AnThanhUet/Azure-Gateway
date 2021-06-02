@@ -1,41 +1,33 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-
-//#include <DHT.h>
-//#define DHTPIN D7
-//#define DHTTYPE DHT11
+#include "DHT.h"
+#define DHTPIN 5
+#define DHTTYPE DHT11 // DHT 11
 /*==========================================================*/
-const char* ssid = "Ahihi";                
-const char* password =  "nguyenthean";           
-const char* mqttServer = "192.168.137.196";            
+const char* ssid = "vtx_wifi";                
+const char* password =  "25041999";           
+const char* mqttServer = "192.168.137.202";            
 /*==========================================================*/
 
 unsigned long b_time;
-String clientId = "ClientESP8266"; 
-            
+String clientId = "ClientESP8266";           
 /*==========================================================*/
 const char* m_topic = "hello";               
 /*==========================================================*/
-
-/*==========================================================*/
 WiFiClient espClient;
-//DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHTPIN, DHTTYPE);
 /*==========================================================*/
-
 PubSubClient client(espClient);
 long lastMsg = 0;
 char msg[50];
 int value = 0;
-
 void setup() {
   Serial.begin(115200);
-  //dht.begin();
+  dht.begin();
   setup_wifi();
-  /* Hàm start - read Callback client */
   client.setServer(mqttServer, 1883);     
   client.setCallback(callback);
 }
-
 /*============= CONNECT WIFI =====================*/
 void setup_wifi() {
   delay(10);
@@ -53,7 +45,6 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 /*==========================================================*/
-
 /*=================== CALL BACK =======================================*/
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message read [");
@@ -65,13 +56,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println();
   xulidulieu(payload);
 }
-
-
 void xulidulieu(byte* data)
 {
   /* Xử lí dữ liệu đọc về tại đây */
 }
-
 /*=================== RECONNECT =======================*/
 void reconnect() {
   while (!client.connected()) {
@@ -89,7 +77,6 @@ void reconnect() {
   }
 }
 /*==========================================================*/
-
 void loop() {
   if (!client.connected()) {
     reconnect();
@@ -98,19 +85,18 @@ void loop() {
   /* Mỗi 1s gửi dữ liệu thời gian lên topic server*/
   long now = millis();
   if (now - lastMsg > 1000) {
-    float h = random(50,70);
-    float t = random(20,30);
+    float h = dht.readHumidity();
+    //float h = random(50,70);
+    //float t = random(20,30);
+    float t = dht.readTemperature();
     String temperature = String(t);
     String humidity = String(h);
-
     String payload = "{";
 //    payload += "\"Area\":"; payload += "XuanThuy"; payload += ",";
 //    payload += "\"ID\":"; payload += "1"; payload += ",";
-
     payload += "\"temperature\":"; payload += temperature; payload += ",";
     payload += "\"humidity\":"; payload += humidity;
     payload += "}";
-
     char telemetry[100];
     payload.toCharArray( telemetry, 100 );
     client.publish(m_topic, telemetry );
